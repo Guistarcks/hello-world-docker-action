@@ -1,0 +1,40 @@
+name: Deploy Application
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "The app to release. The name should be the same as name in package.json"
+        required: true
+      version:
+        description: "The version to release. The version should be the same as version in package.json. For example, 1.0.0"
+        required: true
+      environment:
+        description: "Select the environment to deploy"
+        required: true
+        type: choice
+        options:
+          - preprod
+          - prod
+          - developer
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Specify your Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy to the selected environment
+        run: |
+          echo "Deploying ${inputs.app} version ${inputs.version} to ${inputs.environment} environment"
+          # Add your deployment logic here
+          # For example, you might call a deployment script or API
